@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="https://cdn.bootcss.com/vue/2.3.0/vue.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.js"></script>
+	<title>flex</title>
+	<style>
+		 h3{
+		 	margin: 10px 0;
+		 }
+		.title{
+			text-align: center;
+			color: #595b5b;
+		}
+		#app{
+			text-align: center;
+			width: 100%;
+		}
+		.flex-box{
+			margin: 0 auto;
+			display: flex;
+			width: 600px;
+			height: 300px;
+			background: #595b5b;
+			box-sizing: border-box;
+			padding: 5px;
+			/* flex-direction: row;
+			flex-wrap: wrap; */
+			/* justify-content: space-around; */
+			/* align-items: flex-end;
+			align-content: flex-start; */
+		}
+		.flex-item{
+			/* flex-basis: auto; */
+			width: 100px;
+			height: 80px;
+			line-height: 80px;
+			background: #30c4f5;
+			text-align: center;
+			margin: 5px 5px;
+		}
+		/* .flex-item:nth-child(8){
+			align-self: flex-end;
+		} */
+	</style>
+</head>
+<body>
+	<h1 class="title">flex弹性盒子 属性模拟器</h1>
+	<div class="flex-box"></div>
+	<div id="app">
+		<h3>容器属性</h3>
+		<button @click="plusFW">加宽</button>
+		<button @click="minFW">减宽</button>
+		<span style="color:red">|</span>
+		<button @click="plusFH">加高</button>
+		<button @click="minFH">减高</button><br /><br />
+		<span>flex-direction:</span>
+		<select v-model='flexD'>
+			<option v-for="item in flexDList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{flexDirection()}}
+		<span style="color:red">|</span>
+		<span>flex-wrap:</span>
+		<select v-model='flexW'>
+			<option v-for="item in flexWList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{flexWrap()}}
+		<span style="color:red">|</span>
+		<span>justify-content:</span>
+		<select v-model='justifyC'>
+			<option v-for="item in justifyCList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{justifyContent()}}
+		<span style="color:red">|</span>
+		<span>align-items:</span>
+		<select v-model='alignI'>
+			<option v-for="item in alignIList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{alignItems()}}
+		<span style="color:red">|</span>
+		<span>align-content:</span>
+		<select v-model='alignC'>
+			<option v-for="item in alignCList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{alignContent()}}
+		<h3>项目属性</h3>
+		<button @click="plusSW">加宽</button>
+		<button @click="minSW">减宽</button>
+		<span style="color:red">|</span>
+		<button @click="plusSH">加高</button>
+		<button @click="minSH">减高</button>
+		<span style="color:red">|</span>
+		<button @click="plusItem">增项</button>
+		<button @click="minItem">减项</button>
+		<span style="color:green">请先加入项目再测试</span><br /><br />
+		<span>flex-grow:</span>
+		<select v-model='flexG'>
+			<option v-for="item in flexGList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{flexGrow()}}
+		<span style="color:red">|</span>
+		<span>flex-shrink:</span>
+		<select v-model='flexS'>
+			<option v-for="item in flexSList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{flexShrink()}}
+		<span style="color:red">|</span>
+		<span>nth-child:</span>
+		<select v-model='nthChild' class="itemNum"></select>
+		{{nthChildList()}}
+		<span>align-self:</span>
+		<select v-model='alignS'>
+			<option v-for="item in alignSList" :value="item.attr">{{item.attr}}</option>
+		</select>
+		{{alignSelf()}}
+		<span style="color:red">|</span>
+		<span>nth-child:</span>
+		<select v-model='nthChildOrder' class="itemNum"></select>
+		<span>order:</span>
+		<select v-model='order' class="itemOrder">
+
+		</select>
+		{{orderF()}}
+	</div>
+</body>
+<script>
+	new Vue({
+		el: '#app',
+		data:{
+			count:0,
+			flexD:"",
+			flexW:"",
+			justifyC:"",
+			alignI:"",
+			alignC:"",
+			flexG:"0",
+			flexS:"0",
+			alignS:"",
+			nthChild:"1",
+			nthChildOrder:"1",
+			order:"0",
+			fatherWidth:600,
+			fatherHeight:300,
+			sonWidth:100,
+			sonHeight:80,
+			flexDList:[
+				{attr:''},
+				{attr:'row'},
+				{attr:'row-reverse'},
+				{attr:'column'},
+				{attr:'column-reverse'}
+			],
+			flexWList:[
+				{attr:''},
+				{attr:'nowrap'},
+				{attr:'wrap'},
+				{attr:'wrap-reverse'}
+			],
+			justifyCList:[
+				{attr:''},
+				{attr:'flex-start'},
+				{attr:'flex-end'},
+				{attr:'center'},
+				{attr:'space-between'},
+				{attr:'space-around'}
+			],
+			alignIList:[
+				{attr:''},
+				{attr:'flex-start'},
+				{attr:'flex-end'},
+				{attr:'center'},
+				{attr:'baseline'},
+				{attr:'stretch'}
+			],
+			alignCList:[
+				{attr:''},
+				{attr:'flex-start'},
+				{attr:'flex-end'},
+				{attr:'center'},
+				{attr:'space-between'},
+				{attr:'space-around'},
+				{attr:'stretch'}
+			],
+			flexGList:[
+				{attr:'0'},
+				{attr:'1'}
+			],
+			flexSList:[
+				{attr:'0'},
+				{attr:'1'}
+			],
+			alignSList:[
+				{attr:''},
+				{attr:'auto'},
+				{attr:'flex-start'},
+				{attr:'flex-end'},
+				{attr:'center'},
+				{attr:'baseline'},
+				{attr:'stretch'}
+			]
+
+		},
+		methods:{
+			nthChildList(){
+				$(".itemOrder").empty();
+				$(".itemNum").empty();
+				for (var i = 1; i < this.count+1; i++) {
+					$(".itemOrder").append('<option value="'+(i-1)+'">'+(i-1)+'</option>');
+					$(".itemNum").append('<option value="'+i+'">'+i+'</option>');
+				}
+			},
+			flexDirection(){
+				$(".flex-box").css('flex-direction',this.flexD);
+			},
+			flexWrap(){
+				$(".flex-box").css('flex-wrap',this.flexW);
+			},
+			justifyContent(){
+				$(".flex-box").css('justify-content',this.justifyC);
+			},
+			alignItems(){
+				$(".flex-box").css('align-items',this.alignI);
+			},
+			alignContent(){
+				$(".flex-box").css('align-content',this.alignC);
+			},
+			flexGrow(){
+				$(".flex-item").css('flex-grow',this.flexG);
+			},
+			flexShrink(){
+				$(".flex-item").css('flex-shrink',this.flexS);
+			},
+			alignSelf(){
+				$('.flex-item:nth-child('+ this.nthChild +')').css('align-self',this.alignS);
+			},
+			orderF(){
+				$('.flex-item:nth-child('+ this.nthChildOrder +')').css('order',this.order);
+			},
+			plusFW:function(){
+				this.fatherWidth += 20;
+				$(".flex-box").css('width',this.fatherWidth);
+			},
+			minFW:function(){
+				this.fatherWidth = this.fatherWidth - 20;
+				$(".flex-box").css('width',this.fatherWidth);
+			},
+			plusFH:function(){
+				this.fatherHeight += 10;
+				$(".flex-box").css('height',this.fatherHeight);
+			},
+			minFH:function(){
+				this.fatherHeight = this.fatherHeight - 10;
+				$(".flex-box").css('height',this.fatherHeight);
+			},
+			plusSW:function(){
+				this.sonWidth = this.sonWidth + 2;
+				$(".flex-item").css('width',this.sonWidth);
+			},
+			minSW:function(){
+				this.sonWidth = this.sonWidth - 2;
+				$(".flex-item").css('width',this.sonWidth);
+				if(this.sonWidth<0){
+					this.sonWidth = 0;
+				}
+			},
+			plusSH:function(){
+				this.sonHeight = this.sonHeight + 6;
+				$(".flex-item").css('height',this.sonHeight).css('line-height',this.sonHeight+'px');
+			},
+			minSH:function(){
+				this.sonHeight = this.sonHeight - 6;
+				$(".flex-item").css('height',this.sonHeight).css('line-height',this.sonHeight+'px');
+				if(this.sonHeight<0){
+					this.sonHeight = 0;
+				}
+			},
+			plusItem:function(){
+				this.count+=1;
+				$(".flex-box").append('<div class="flex-item" style="width:'+this.sonWidth+'px'+';height:'+this.sonHeight+'px;'+'line-height:'+this.sonHeight+'px'+'">'+this.count+'</div>');
+			},
+			minItem:function(){
+				this.count = this.count - 1;
+				if(this.count<0){
+					this.count = 0;
+				}
+				$(".flex-item:last-child").remove();
+			}
+		}
+	})
+</script>
+</html>
